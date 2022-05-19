@@ -6,6 +6,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../src/store";
 import { getCharacter } from "../src/features/characterSlice";
+import { Down, Up } from "../src/icons";
 
 type Character = {
   id: string;
@@ -45,15 +46,29 @@ const Home: NextPage = () => {
     setData(datas);
   };
 
-  // item up down func
-  const arraySwap = (arr: any, idx1: any, idx2: any) => {
-    const temp = arr[idx1];
-    arr[idx1] = arr[idx2];
-    arr[idx2] = temp;
-    return arr;
+  const UP = -1;
+  const DOWN = 1;
+  //handle Move Function
+  const handleMove = (id: any, direction: any) => {
+    const items = data;
+
+    const position = items.findIndex((i) => i.id === id);
+    if (position < 0) {
+      throw new Error("Given item not found.");
+    } else if (
+      (direction === UP && position === 0) ||
+      (direction === DOWN && position === items.length - 1)
+    ) {
+      return; // canot move outside of array
+    }
+
+    const item = items[position]; // save item for later
+    const newItems = items.filter((i) => i.id !== id); // remove item from array
+    newItems.splice(position + direction, 0, item);
+
+    setData(newItems);
   };
 
-  // arraySwap(data, 1, 3)[(5, 11, 9, 7)];
   return (
     <>
       <div className="bg-gray-200 min-h-screen">
@@ -73,9 +88,13 @@ const Home: NextPage = () => {
                 id={item.id}
                 name={item.name}
                 remove={() => deleteData(item.id)}
-                // onArrowDown={arraySwap.bind(this, arr, 0, 1)}
-                // onArrowUp={arraySwap.bind(this, arr, 1, 0)}
               />
+              <button onClick={() => handleMove(item.id, UP)}>
+                <Up></Up>
+              </button>
+              <button onClick={() => handleMove(item.id, DOWN)}>
+                <Down></Down>
+              </button>
             </>
           ))}
         </div>

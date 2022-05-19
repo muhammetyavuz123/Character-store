@@ -6,8 +6,11 @@ import { Rubbish, Down, Up } from "../icons";
 export const ListItem: FC<{
   id: string;
   name: string;
+  items?: null;
   remove?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}> = ({ id, name, remove }) => {
+}> = ({ id, name, remove, items }) => {
+  console.log("itemss", items);
+
   return (
     <>
       <div className="flex justify-start items-center bg-white mb-3 rounded-md">
@@ -26,8 +29,8 @@ export const ListItem: FC<{
           </Link>
         </div>
         <div className="flex-1 flex justify-end items-end pr-3">
-          <Up />
-          <Down />
+          {/* <Up />
+          <Down /> */}
           <button onClick={remove}>
             <Rubbish />
           </button>
